@@ -1147,11 +1147,19 @@ fuzz_mdns(void) {
 #endif
 
 #ifdef _WIN32
-BOOL console_handler(DWORD signal) {
-	if (signal == CTRL_C_EVENT) {
-		running = 0;
+// Define the console handler function with the correct signature
+BOOL WINAPI
+console_handler(DWORD ctrl_type) {
+	switch (ctrl_type) {
+		case CTRL_C_EVENT:
+			printf("Ctrl-C event\n");
+			return TRUE;
+		case CTRL_CLOSE_EVENT:
+			printf("Ctrl-Close event\n");
+			return TRUE;
+		default:
+			return FALSE;
 	}
-	return TRUE;
 }
 #else
 void signal_handler(int signal) {
